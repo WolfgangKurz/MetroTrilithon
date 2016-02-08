@@ -14,11 +14,11 @@ namespace MetroTrilithon.Serialization
 
 		public bool IsLoaded { get; private set; }
 
+
 		public FileSettingsProvider(string path)
 		{
 			this._path = path;
 		}
-
 
 		public void SetValue<T>(string key, T value)
 		{
@@ -97,6 +97,12 @@ namespace MetroTrilithon.Serialization
 			}
 
 			this.IsLoaded = true;
+		}
+
+		event EventHandler ISerializationProvider.Reloaded
+		{
+			add { }
+			remove { }
 		}
 	}
 }

@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-					xmlns:controls="clr-namespace:MetroTrilithon.Controls">
+					xmlns:controls="clr-namespace:MetroTrilithon.UI.Controls">
 
 	<Style TargetType="{x:Type controls:CallMethodButton}">
 		<Setter Property="Background"
@@ -10,7 +10,7 @@
 		<Setter Property="Foreground"
 				Value="{DynamicResource ActiveForegroundBrushKey}" />
 		<Setter Property="BorderThickness"
-				Value="1" />
+				Value=".99" />
 		<Setter Property="Padding"
 				Value="8,2" />
 		<Setter Property="HorizontalContentAlignment"

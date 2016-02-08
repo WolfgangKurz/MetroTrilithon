@@ -32,10 +32,10 @@ namespace MetroTrilithon.Serialization
 					this.Provider.Load();
 				}
 
-				T obj;
+				object obj;
 				if (this.Provider.TryGetValue(this.Key, out obj))
 				{
-					this._value = obj;
+					this._value = this.DeserializeCore(obj);
 					this._cached = true;
 				}
 				else
@@ -57,7 +57,7 @@ namespace MetroTrilithon.Serialization
 				var old = this._value;
 				this._value = value;
 				this._cached = true;
-				this.Provider.SetValue(this.Key, value);
+				this.Provider.SetValue(this.Key, this.SerializeCore(value));
 				this.OnValueChanged(old, value);
 
 				if (this.AutoSave) this.Provider.Save();
@@ -74,7 +74,40 @@ namespace MetroTrilithon.Serialization
 			this.Key = key;
 			this.Provider = provider;
 			this.Default = defaultValue;
+
+			this.Provider.Reloaded += (sender, args) =>
+			{
+				if (this._cached)
+				{
+					this._cached = false;
+
+					var oldValue = this._value;
+					var newValue = this.Value;
+					if (!Equals(oldValue, newValue))
+					{
+						this.OnValueChanged(oldValue, newValue);
+					}
+				}
+				else
+				{
+					var oldValue = default(T);
+					var newValue = this.Value;
+					this.OnValueChanged(oldValue, newValue);
+				}
+			};
 		}
+
+
+		protected virtual object SerializeCore(T value)
+		{
+			return value;
+		}
+
+		protected virtual T DeserializeCore(object value)
+		{
+			return (T)value;
+		}
+
 
 		public virtual IDisposable Subscribe(Action<T> listener)
 		{
@@ -89,14 +122,14 @@ namespace MetroTrilithon.Serialization
 				this.Provider.Load();
 			}
 
-			T old;
+			object old;
 			if (this.Provider.TryGetValue(this.Key, out old))
 			{
 				if (this.Provider.RemoveValue(this.Key))
 				{
 					this._value = default(T);
 					this._cached = false;
-					this.OnValueChanged(old, this.Default);
+					this.OnValueChanged(this.DeserializeCore(old), this.Default);
 
 					if (this.AutoSave) this.Provider.Save();
 				}
@@ -147,7 +180,7 @@ namespace MetroTrilithon.Serialization
 
 		event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
 		{
-			add { this.ValueChanged += (this._handlers[value] = (sender, args) => value(sender, new PropertyChangedEventArgs(nameof(Value)))); }
+			add { this.ValueChanged += (this._handlers[value] = (sender, args) => value(sender, new PropertyChangedEventArgs(nameof(this.Value)))); }
 			remove
 			{
 				EventHandler<ValueChangedEventArgs<T>> handler;
