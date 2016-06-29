@@ -1,3 +1,6 @@
 [submodule "FreyYa"]
 	path = source/MetroRadiance
 	url = https://github.com/FreyYa/MetroRadiance.git
+[submodule "source/MetroRadiance"]
+	path = source/MetroRadiance
+	url = https://github.com/CirnoV/MetroRadiance.git
