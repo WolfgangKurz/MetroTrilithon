@@ -26,6 +26,7 @@ namespace MetroTrilithon.Serialization
 		{
 			this.AddProperty(key, typeof(T));
 			this[key] = value;
+			this.Save();
 		}
 
 		public bool TryGetValue<T>(string key, out T value)
