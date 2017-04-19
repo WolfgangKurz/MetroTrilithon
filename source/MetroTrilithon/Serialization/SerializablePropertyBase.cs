@@ -17,7 +17,7 @@ namespace MetroTrilithon.Serialization
 
 		public ISerializationProvider Provider { get; }
 
-		public bool AutoSave { get; set; }
+		public bool AutoSave { get; set; } = true; // Default True
 
 		public T Default { get; }
 
